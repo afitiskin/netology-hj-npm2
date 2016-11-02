@@ -3,13 +3,41 @@
   "version": "1.0.0",
   "description": "Learn NPM and node.js",
   "main": "index.js",
+  "watch": {
+    "copy:html": "src/*.html"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "mkdir": "mkdir -p dist/assets",
+    "precompile:sass": "npm run mkdir",
+    "compile:sass": "node-sass src/styles/main.sass > dist/assets/main.css",
+    "postcompile:sass": "postcss --use autoprefixer dist/assets/main.css -d dist/assets",
+    "watch:sass": "node-sass --watch --recursive --output dist/assets --source-map true --source-map-contents src/styles",
+    "precopy:html": "npm run mkdir",
+    "copy:html": "cp src/index.html dist/index.html",
+    "preconcat:js": "npm run mkdir",
+    "concat:js": "browserify src/scripts/main.js -o dist/assets/main.js",
+    "prewatch:js": "npm run mkdir",
+    "watch:js": "watchify src/scripts/main.js -o dist/assets/main.js",
+    "watch": "npm-watch | npm run watch:sass | npm run watch:js",
+    "build": "npm run copy:html && npm run compile:sass && npm run concat:js",
+    "view": "http-server dist"
   },
   "keywords": [
     "npm",
     "nodejs"
   ],
   "author": "Alex Fitiskin",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^6.5.1",
+    "browserify": "^13.1.1",
+    "http-server": "^0.9.0",
+    "node-sass": "^3.10.1",
+    "npm-watch": "^0.1.6",
+    "postcss-cli": "^2.6.0",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "jquery": "^3.1.1"
+  }
 }
